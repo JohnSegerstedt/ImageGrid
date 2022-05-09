@@ -52,7 +52,7 @@ def merge(base, new_image, page_index):
     if(page_index != 0):
         merged.paste(base)
             
-    merged.paste(new_image, (new_image.size[0]*(page_index%3), new_image.size[1]*(int)(page_index/3)))
+    merged.paste(new_image, (new_image.size[0]*(page_index%grid_width), new_image.size[1]*(int)(page_index/grid_height)))
 
     if(page_index == 8):
         page_index = -1
@@ -137,7 +137,7 @@ if verbose:
         for filepath in filepaths:
             print(filepath)
 
-page = create_empty_page(Image.open(filepaths_list[0][0])) # todo, add custom image size
+page = create_empty_page(Image.open(filepaths_list[0][0]))
 
 create_directories(output_file_name, delete_old_output)
 
@@ -168,7 +168,7 @@ for i in range(len(filepaths_list)):
                 for copy in range(copies):
                     with Image.open(filepaths[i_inner]) as file:
                         if(verbose):
-                            print("Merging: "+str((total_index+1)).zfill(num_digits)+"/"+str(total_files)+" | #"+str(math.ceil((total_index+1)/9))+"/"+str(math.ceil(total_files/9))+" | '"+filepaths[i_inner]+"'")
+                            print("Merging: "+str((total_index+1)).zfill(num_digits)+"/"+str(total_files)+" | #"+str(math.ceil((total_index+1)/(grid_height*grid_width)))+"/"+str(math.ceil(total_files/(grid_height*grid_width)))+" | '"+filepaths[i_inner]+"'")
 
 
                         page, page_index = merge(page, file, page_index)
