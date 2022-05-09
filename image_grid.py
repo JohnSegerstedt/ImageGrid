@@ -14,6 +14,7 @@ parser = argparse.ArgumentParser()
 # python image_grid.py -i "folder/nested_folder/" -c 3 -v -o "output_folder/output_file"
 # python image_grid.py -i "input/1/" -c 1 -i "input/2/" -c 2 -i "input/3/" -c 3
 
+
 # ------------------------------------- VARIABLES -----------------------------------------------------
 
 parser.add_argument("-c", "--copy", action='append', type=int, help="Number of duplicate copies")
@@ -42,6 +43,7 @@ delete_old_output = True if args.delete else False
 
 grid_height = args.grid_height if args.grid_height else 3
 grid_width = args.grid_width if args.grid_width else 3
+
 
 # ------------------------------------- FUNCTIONS -----------------------------------------------------
 
@@ -83,15 +85,7 @@ def read_files(filepaths, input_folder):
                     print(filename, im.format, f"{im.size}x{im.mode}")
     print("Found files: "+str(len(filepaths)))
     return filepaths
-
-
-def validate_number_of_files(filepaths):
-    number_of_files = len(filepaths)
-    if(number_of_files < 2):
-        print("Too few images found: '"+str(number_of_files)+"', no merging required.")
-        return False
-    return True
-
+ 
     
 def create_directories(output_file_name, delete_old_output):
 
@@ -116,13 +110,11 @@ def create_directory(directory):
         except Exception as error:
             if retry == 99:
                 print(error)
-    
+ 
+ 
 # ------------------------------------- MAIN -----------------------------------------------------
 
-
 print("---------------------------------------------")
-
-
 
 filepaths_list = [[] for i in range(len(input_folders))]
 
@@ -154,25 +146,24 @@ if(verbose):
     print("         merge | page | name")
                 
 for i in range(len(filepaths_list)):
-    if validate_number_of_files(filepaths_list[i]):
 
-            filepaths = filepaths_list[i]
-            copies = copies_list[i]
+        filepaths = filepaths_list[i]
+        copies = copies_list[i]
 
-            num_items_this_page = 0
-            num_items = len(filepaths)
+        num_items_this_page = 0
+        num_items = len(filepaths)
             
 
             
-            for i_inner in range(num_items):
-                for copy in range(copies):
-                    with Image.open(filepaths[i_inner]) as file:
-                        if(verbose):
-                            print("Merging: "+str((total_index+1)).zfill(num_digits)+"/"+str(total_files)+" | #"+str(math.ceil((total_index+1)/(grid_height*grid_width)))+"/"+str(math.ceil(total_files/(grid_height*grid_width)))+" | '"+filepaths[i_inner]+"'")
+        for i_inner in range(num_items):
+            for copy in range(copies):
+                with Image.open(filepaths[i_inner]) as file:
+                    if(verbose):
+                        print("Merging: "+str((total_index+1)).zfill(num_digits)+"/"+str(total_files)+" | #"+str(math.ceil((total_index+1)/(grid_height*grid_width)))+"/"+str(math.ceil(total_files/(grid_height*grid_width)))+" | '"+filepaths[i_inner]+"'")
 
 
-                        page, page_index = merge(page, file, page_index)
-                        total_index += 1
+                    page, page_index = merge(page, file, page_index)
+                    total_index += 1
 
 if(page_index != 0):
     if(verbose):
